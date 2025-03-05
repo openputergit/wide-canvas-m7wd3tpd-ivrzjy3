@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkRewards - URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-cyan-500 to-blue-500 min-h-screen font-['Inter']">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-2xl p-6">
+            <h1 class="text-3xl font-bold text-center mb-2">LinkRewards</h1>
+            <p class="text-center text-gray-600 mb-8">Shorten URLs & Earn Rewards</p>
+
+            <div class="space-y-6">
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Enter Long URL</label>
+                    <input type="url" id="longUrl" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://example.com">
+                </div>
+
+                <button onclick="shortenURL()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-link-45deg mr-2"></i> Shorten URL
+                </button>
+
+                <div id="result" class="hidden">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-medium mb-2">Shortened URL:</h3>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="shortUrl" class="flex-1 px-4 py-2 border rounded-lg bg-white" readonly>
+                            <button onclick="copyURL()" class="bg-gray-200 p-2 rounded-lg hover:bg-gray-300">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6">
+                    <h2 class="text-xl font-semibold mb-4">Rewards Dashboard</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Total Links</p>
+                            <p class="text-2xl font-bold" id="totalLinks">0</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Points Earned</p>
+                            <p class="text-2xl font-bold" id="pointsEarned">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let totalLinks = 0;
+        let points = 0;
+
+        function shortenURL() {
+            const longUrl = document.getElementById('longUrl').value;
+            if (!longUrl) {
+                alert('Please enter a valid URL');
+                return;
+            }
+
+            // Generate a random short URL (in production, this would connect to a backend)
+            const shortCode = Math.random().toString(36).substr(2, 6);
+            const shortUrl = `https://lnkrwd.com/${shortCode}`;
+
+            document.getElementById('shortUrl').value = shortUrl;
+            document.getElementById('result').classList.remove('hidden');
+
+            // Update stats
+            totalLinks++;
+            points += 10;
+            updateStats();
+        }
+
+        function copyURL() {
+            const shortUrl = document.getElementById('shortUrl');
+            shortUrl.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const copyBtn = event.currentTarget;
+            const originalHTML = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="bi bi-check2"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalHTML;
+            }, 1000);
+        }
+
+        function updateStats() {
+            document.getElementById('totalLinks').textContent = totalLinks;
+            document.getElementById('pointsEarned').textContent = points;
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
